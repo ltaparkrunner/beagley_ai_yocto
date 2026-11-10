@@ -1,0 +1,54 @@
+header:
+  version: 14
+
+machine: beagley-ai
+distro: poky
+target: core-image-minimal
+
+repos:
+  poky:
+    url: "https://git.yoctoproject.org/poky"
+    branch: "scarthgap"
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: "https://github.com/openembedded/meta-openembedded.git"
+    branch: "scarthgap"
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+
+  meta-arm:
+    url: "https://git.yoctoproject.org/meta-arm"
+    branch: "scarthgap"
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+
+  meta-ti:
+    url: "https://git.yoctoproject.org/meta-ti"
+    branch: "scarthgap"
+    layers:
+      meta-ti-bsp:
+      meta-beagle:
+
+local_conf_header:
+  custom-settings: |
+    # Оптимизация сборки под ваш процессор
+    BB_NUMBER_THREADS = "${@oe.utils.cpu_count()}"
+    PARALLEL_MAKE = "-j ${@oe.utils.cpu_count()}"
+    
+    # Пакетный менеджер
+    PACKAGE_CLASSES = "package_ipk"
+    
+    # Добавление SSH для связи с платой
+    IMAGE_FEATURES += "ssh-server-openssh"
+
+    # ХАК ДЛЯ ОБХОДА МИКСИНА: полностью изолируем рецепты ядра 6.12.
+    # Это отменит жесткое требование слоя meta-lts-mixins со стороны meta-ti.
+    BBMASK += "meta-ti/meta-ti-bsp/recipes-kernel/linux/linux-ti-staging_6.12.bb"
+
