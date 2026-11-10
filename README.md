@@ -33,10 +33,10 @@ To build the image inside an isolated `kas` Docker container, follow these steps
 
    # Start the build container
    docker run --rm -it \
-     --user (id -u):(id -g) \
+     --user $(id -u):$(id -g) \
      --workdir=/workspace \
-     -v \$(pwd):/workspace \
-     -v \$HOME/.kas-cache:/work/cache \
+     -v $(pwd):/workspace \
+     -v $HOME/.kas-cache:/work/cache \
      ghcr.io/siemens/kas/kas:5.3 \
      build kas-beagley-ai.yml
    ```
