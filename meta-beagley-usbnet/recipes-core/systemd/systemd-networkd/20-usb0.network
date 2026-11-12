@@ -1,0 +1,6 @@
+[Match]
+Name=usb* enp*
+
+[Network]
+Address=192.168.7.2/24
+

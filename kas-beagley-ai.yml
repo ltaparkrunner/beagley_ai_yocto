@@ -6,6 +6,10 @@ distro: poky
 target: core-image-minimal
 
 repos:
+  beagley_ai_yocto:
+    layers:
+      meta-beagley-usbnet:
+
   poky:
     url: "https://git.yoctoproject.org/poky"
     branch: "scarthgap"
@@ -45,10 +49,25 @@ local_conf_header:
     # Пакетный менеджер
     PACKAGE_CLASSES = "package_ipk"
     
-    # Добавление SSH для связи с платой
+    # Добавление SSH и отладочных хаков для пустого root-пароля
     IMAGE_FEATURES += "ssh-server-openssh"
+    EXTRA_IMAGE_FEATURES += "debug-tweaks"
 
     # ХАК ДЛЯ ОБХОДА МИКСИНА: полностью изолируем рецепты ядра 6.12.
-    # Это отменит жесткое требование слоя meta-lts-mixins со стороны meta-ti.
     BBMASK += "meta-ti/meta-ti-bsp/recipes-kernel/linux/linux-ti-staging_6.12.bb"
+
+    # ==========================================================================
+    # ПЕРЕКЛЮЧЕНИЕ НА SYSTEMD И СЕТЕВЫЕ СЛУЖБЫ
+    # ==========================================================================
+    INIT_MANAGER = "systemd"
+    DISTRO_FEATURES:append = " systemd"
+    DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+
+    # Исправлено: ставим основной пакет systemd (внутри него уже есть networkd)
+    IMAGE_INSTALL:append = " systemd"
+    
+    # Автозапуск драйвера Ethernet-over-USB при старте ядра
+    KERNEL_MODULE_AUTOLOAD += "g_ether"
 
