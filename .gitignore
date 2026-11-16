@@ -7,6 +7,12 @@ poky/
 meta-openembedded/
 meta-arm/
 meta-ti/
+meta-arago/
+meta-clang/
+meta-edgeai/
+meta-tisdk/
+meta-virtualization/
+
 
 # ==============================================================================
 # 2. Директория сборки Yocto (BitBake)
