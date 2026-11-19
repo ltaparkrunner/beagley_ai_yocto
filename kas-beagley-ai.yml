@@ -120,6 +120,7 @@ local_conf_header:
     IMAGE_INSTALL:append = " systemd \
         grub-efi \
         kernel-modules \
+        dtc \
         python3 \
         python3-pip \
         python3-numpy \
